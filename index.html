@@ -212,6 +212,7 @@
       aspect-ratio: 1.9 / 1;
       position: relative;
       overflow: hidden;
+      --average-angle: -74deg;
     }
 
     .arc {
@@ -239,14 +240,68 @@
       position: absolute;
       width: 44%;
       height: 6px;
-      left: 6%;
+      left: 50%;
       bottom: 0;
-      transform-origin: 100% 50%;
+      transform-origin: 0% 50%;
       transform: rotate(var(--needle-angle));
-      background: linear-gradient(90deg, transparent, #1e2824 18%, #1e2824);
+      background: linear-gradient(90deg, #1e2824, #1e2824 78%, transparent);
       border-radius: 99px;
       transition: transform .45s ease;
-      z-index: 3;
+      z-index: 5;
+    }
+
+    .needle::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      width: 13px;
+      height: 13px;
+      transform: translateY(-50%) rotate(45deg);
+      background: #1e2824;
+      border-radius: 2px;
+    }
+
+    .average-marker {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 44%;
+      height: 2px;
+      transform-origin: 0% 50%;
+      transform: rotate(var(--average-angle));
+      z-index: 4;
+    }
+
+    .average-marker::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      top: 50%;
+      width: 14px;
+      height: 28px;
+      transform: translateY(-50%);
+      background: #1e2824;
+      border: 3px solid #fff6e5;
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(30, 40, 36, .22);
+    }
+
+    .average-badge {
+      position: absolute;
+      right: 17%;
+      bottom: 47%;
+      z-index: 6;
+      border: 1px solid #d7a04b;
+      background: #fff8e9;
+      color: #6e451b;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: .72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      box-shadow: 0 8px 22px rgba(28, 36, 30, .1);
     }
 
     .hub {
@@ -563,10 +618,12 @@
             <div class="meter-wrap">
               <div class="meter" id="meter" style="--needle-angle: 0deg">
                 <div class="arc"></div>
+                <div class="average-marker" aria-hidden="true"></div>
+                <div class="average-badge">U.S. avg</div>
                 <div class="needle"></div>
                 <div class="hub"></div>
               </div>
-              <div class="meter-labels"><span>Lower</span><span>Average</span><span>Higher</span></div>
+              <div class="meter-labels"><span>Lower</span><span>U.S. average</span><span>Higher</span></div>
             </div>
             <div class="score">
               <div class="big" id="totalOut">0 lb</div>
@@ -778,8 +835,12 @@
       $("aiKwhStat").textContent = result.aiKwh < 10 ? result.aiKwh.toFixed(1) : format(result.aiKwh);
       $("digitalKwhStat").textContent = result.digitalKwh < 10 ? result.digitalKwh.toFixed(1) : format(result.digitalKwh);
 
-      const ratio = Math.min(result.total / (factors.usAverageLb * 1.8), 1);
-      const angle = -90 + ratio * 180;
+      const averageAngle = -74;
+      const maxGaugeLb = factors.usAverageLb * 2;
+      const clampedTotal = Math.min(Math.max(result.total, 0), maxGaugeLb);
+      const angle = clampedTotal <= factors.usAverageLb
+        ? -180 + (clampedTotal / factors.usAverageLb) * (180 + averageAngle)
+        : averageAngle + ((clampedTotal - factors.usAverageLb) / factors.usAverageLb) * Math.abs(averageAngle);
       $("meter").style.setProperty("--needle-angle", `${angle}deg`);
     }
 
