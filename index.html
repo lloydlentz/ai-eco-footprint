@@ -212,7 +212,7 @@
       aspect-ratio: 1.9 / 1;
       position: relative;
       overflow: hidden;
-      --average-angle: -74deg;
+      --average-angle: -61deg;
     }
 
     .arc {
@@ -242,9 +242,9 @@
       height: 6px;
       left: 50%;
       bottom: 0;
-      transform-origin: 0% 50%;
+      transform-origin: 0 50%;
       transform: rotate(var(--needle-angle));
-      background: linear-gradient(90deg, #1e2824, #1e2824 78%, transparent);
+      background: #1e2824;
       border-radius: 99px;
       transition: transform .45s ease;
       z-index: 5;
@@ -253,13 +253,14 @@
     .needle::after {
       content: "";
       position: absolute;
-      right: -2px;
+      right: -15px;
       top: 50%;
-      width: 13px;
-      height: 13px;
-      transform: translateY(-50%) rotate(45deg);
-      background: #1e2824;
-      border-radius: 2px;
+      width: 0;
+      height: 0;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 18px solid #1e2824;
     }
 
     .average-marker {
@@ -289,8 +290,9 @@
 
     .average-badge {
       position: absolute;
-      right: 17%;
-      bottom: 47%;
+      left: 65%;
+      top: 12%;
+      transform: translateX(-50%);
       z-index: 6;
       border: 1px solid #d7a04b;
       background: #fff8e9;
@@ -302,6 +304,20 @@
       text-transform: uppercase;
       letter-spacing: .05em;
       box-shadow: 0 8px 22px rgba(28, 36, 30, .1);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .average-badge::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      width: 2px;
+      height: 18px;
+      transform: rotate(24deg);
+      transform-origin: top;
+      background: #d7a04b;
     }
 
     .hub {
@@ -837,7 +853,7 @@
       $("aiKwhStat").textContent = result.aiKwh < 10 ? result.aiKwh.toFixed(1) : format(result.aiKwh);
       $("digitalKwhStat").textContent = result.digitalKwh < 10 ? result.digitalKwh.toFixed(1) : format(result.digitalKwh);
 
-      const averageAngle = -74;
+      const averageAngle = -61;
       const maxGaugeLb = factors.usAverageLb * 2;
       const clampedTotal = Math.min(Math.max(result.total, 0), maxGaugeLb);
       const angle = clampedTotal <= factors.usAverageLb
