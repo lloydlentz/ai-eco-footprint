@@ -554,7 +554,7 @@
 
     .context-rows {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
       margin-top: 16px;
     }
@@ -949,8 +949,8 @@
         </div>
 
         <section class="results-panel advanced-context">
-          <h2>Broader impact context</h2>
-          <p>These estimates are intentionally directional. They help show which environmental lens is being used: climate pollution, electricity demand, water pressure, material extraction, local air quality, or waste.</p>
+          <h2>Your choices vs. the larger system</h2>
+          <p>These panels are meant to answer a different question than the footprint total: when you conserve, where does that effort sit inside the much larger systems of water, energy, industry, agriculture, transportation, and waste?</p>
           <div class="impact-summary">
             <div class="impact-tile" style="--accent: var(--clay)">
               <span>Climate score</span>
@@ -963,9 +963,9 @@
               <span>home, digital, and AI electricity estimate</span>
             </div>
             <div class="impact-tile" style="--accent: var(--water)">
-              <span>Water pressure</span>
+              <span>Your water signal</span>
               <b id="waterScore">0 gal</b>
-              <span>direct household plus rough indirect food and digital estimate</span>
+              <span id="waterScoreCopy">direct household plus rough indirect food and digital estimate</span>
             </div>
             <div class="impact-tile" style="--accent: var(--moss)">
               <span>Materials signal</span>
@@ -976,8 +976,8 @@
 
           <div class="context-rows">
             <article class="context-card" style="--accent: var(--clay)">
-              <h3>U.S. GHG sectors</h3>
-              <p class="fineprint">Transportation, power, industry, buildings, and agriculture frame where individual choices sit in the larger economy.</p>
+              <h3>Climate: personal levers sit inside sector systems</h3>
+              <p class="fineprint">Your total is personal CO2e. The national picture is dominated by transportation, electricity, and industry, so individual choices connect to larger systems through cars, flights, buildings, purchases, and the grid.</p>
               <div class="mini-bars">
                 <div class="mini-row"><span>Transport</span><div class="mini-track"><div class="mini-fill" style="--w:30%"></div></div><span>30%</span></div>
                 <div class="mini-row"><span>Power</span><div class="mini-track"><div class="mini-fill" style="--w:24%"></div></div><span>24%</span></div>
@@ -987,21 +987,32 @@
               </div>
             </article>
             <article class="context-card" style="--accent: var(--water)">
-              <h3>Water system context</h3>
-              <p class="fineprint">Water comparisons should separate withdrawals from consumption and always ask whether the use happens in a stressed watershed.</p>
+              <h3>Water: faucet use is one small part</h3>
+              <p class="fineprint">Your direct household water is part of public supply. In U.S. withdrawals, public supply is far smaller than thermoelectric power cooling and irrigation; food choices often matter through that irrigation system.</p>
               <div class="mini-bars">
-                <div class="mini-row"><span>Global ag.</span><div class="mini-track"><div class="mini-fill" style="--w:69%"></div></div><span>69%</span></div>
-                <div class="mini-row"><span>Industry</span><div class="mini-track"><div class="mini-fill" style="--w:19%"></div></div><span>19%</span></div>
-                <div class="mini-row"><span>Municipal</span><div class="mini-track"><div class="mini-fill" style="--w:12%"></div></div><span>12%</span></div>
+                <div class="mini-row"><span>Power cooling</span><div class="mini-track"><div class="mini-fill" style="--w:41%"></div></div><span>41%</span></div>
+                <div class="mini-row"><span>Irrigation</span><div class="mini-track"><div class="mini-fill" style="--w:37%"></div></div><span>37%</span></div>
+                <div class="mini-row"><span>Public supply</span><div class="mini-track"><div class="mini-fill" style="--w:12%"></div></div><span>12%</span></div>
+                <div class="mini-row"><span>Industrial</span><div class="mini-track"><div class="mini-fill" style="--w:5%"></div></div><span>5%</span></div>
+                <div class="mini-row"><span>Your faucet</span><div class="mini-track"><div class="mini-fill" id="directWaterBar" style="--w:1%"></div></div><span id="directWaterPct">in 12%</span></div>
               </div>
             </article>
             <article class="context-card" style="--accent: var(--violet)">
-              <h3>Digital infrastructure</h3>
-              <p class="fineprint">AI belongs with data centers, networks, device replacement, cooling water, and electricity demand rather than prompt counts alone.</p>
+              <h3>Electricity: your digital use rides on the grid</h3>
+              <p class="fineprint">Your home, digital, and AI use are personal electricity demand. Their impact depends on the grid, peak demand, and data-center growth rather than kWh alone.</p>
               <div class="mini-bars">
                 <div class="mini-row"><span>AI kWh</span><div class="mini-track"><div class="mini-fill" id="aiEnergyBar" style="--w:1%"></div></div><span id="aiEnergyPct">0%</span></div>
                 <div class="mini-row"><span>Digital</span><div class="mini-track"><div class="mini-fill" id="digitalEnergyBar" style="--w:1%"></div></div><span id="digitalEnergyPct">0%</span></div>
                 <div class="mini-row"><span>Home</span><div class="mini-track"><div class="mini-fill" id="homeEnergyBar" style="--w:1%"></div></div><span id="homeEnergyPct">0%</span></div>
+              </div>
+            </article>
+            <article class="context-card" style="--accent: var(--moss)">
+              <h3>Waste and materials: end-of-pipe is not the whole story</h3>
+              <p class="fineprint">Recycling and composting help, but the larger material impact often comes earlier: mining, manufacturing, packaging, shipping, and how quickly products are replaced.</p>
+              <div class="mini-bars">
+                <div class="mini-row"><span>Your goods</span><div class="mini-track"><div class="mini-fill" id="goodsMaterialBar" style="--w:1%"></div></div><span id="goodsMaterialPct">0%</span></div>
+                <div class="mini-row"><span>Devices</span><div class="mini-track"><div class="mini-fill" id="deviceMaterialBar" style="--w:1%"></div></div><span id="deviceMaterialPct">0%</span></div>
+                <div class="mini-row"><span>U.S. MSW</span><div class="mini-track"><div class="mini-fill" style="--w:49%"></div></div><span>4.9 lb/d</span></div>
               </div>
             </article>
           </div>
@@ -1136,8 +1147,8 @@
         summary: "Home impact includes electricity and heating fuel divided across the people sharing the home.",
         includes: ["Electricity use", "Heating gas", "Shared household energy", "Some indoor air-quality considerations"],
         lenses: ["Climate: CO2e from electricity and gas", "Energy: kWh and therm demand", "Water: power plant and data-center cooling context", "Air: combustion and grid pollution"],
-        context: "Compare with average U.S. household electricity use, regional grid emissions, and building-sector emissions.",
-        caveat: "Housing type, climate, insulation, square footage, and local grid mix can change this estimate substantially."
+        context: "Compare with average U.S. household electricity use and then with residential/commercial buildings inside the larger energy system.",
+        caveat: "Household efficiency matters, but grid mix, building codes, rental constraints, weather, and utility infrastructure shape what an individual can control."
       },
       Driving: {
         accent: "var(--clay)",
@@ -1160,31 +1171,31 @@
         summary: "Food impact estimates diet-related emissions and a rough indirect water signal.",
         includes: ["Diet pattern", "Meat and dairy intensity", "Agricultural methane and nitrous oxide", "Indirect water and land pressure"],
         lenses: ["Climate: methane, nitrous oxide, and CO2e", "Water: irrigation and feed production", "Land: pasture and crop acreage", "Biodiversity: ecosystem pressure"],
-        context: "Compare direct household water with food water footprints, and compare agriculture with global water withdrawals.",
-        caveat: "Food impacts vary by production method and region; diet categories are broad, not food-by-food accounting."
+        context: "Compare direct household water with food water footprints, then compare public supply with irrigation and thermoelectric withdrawals. Faucet conservation can be locally important, but food and power systems are often larger water levers.",
+        caveat: "Food impacts vary by production method and region; diet categories are broad, not food-by-food accounting. Water stress matters more than gallons alone."
       },
       "Waste & goods": {
         accent: "var(--moss)",
         summary: "Waste and goods represent consumption, landfill waste, recycling, composting, and buying less.",
         includes: ["General consumption", "Recycling", "Composting", "Food waste", "Repair and reuse behavior"],
         lenses: ["Materials: extraction and manufacturing", "Climate: landfill methane and avoided production", "Waste: landfill and circularity"],
-        context: "Compare recycling and composting with upstream reduction; avoiding a purchase or food waste often beats end-of-life fixes.",
-        caveat: "Product footprints are hard to estimate without purchase data, and recycling benefits depend on local systems."
+        context: "Compare recycling and composting with upstream reduction. Household sorting helps, but manufacturing, packaging, product design, and replacement cycles shape much of the material burden before trash day.",
+        caveat: "Product footprints are hard to estimate without purchase data, and recycling benefits depend on local systems and contamination rates."
       },
       "Digital life": {
         accent: "#267b83",
         summary: "Digital life includes streaming, social media, cloud storage, gaming, and annualized device replacement.",
         includes: ["Streaming video", "Social media", "Gaming or high-power computer use", "Cloud storage", "Device replacement"],
         lenses: ["Energy: device, network, and data-center electricity", "Water: cooling context", "Materials: chips, batteries, screens, and devices"],
-        context: "Compare with household electricity first, then with broader data-center and network demand.",
-        caveat: "Digital-service impacts depend heavily on device type, network, data center, grid mix, and whether usage is additive."
+        context: "Compare with household electricity first, then with broader data-center and network demand. Personal digital habits are usually modest alone, but growth in aggregate demand can be system-relevant.",
+        caveat: "Digital-service impacts depend heavily on device type, network, data center, grid mix, cooling system, and whether usage is additive."
       },
       AI: {
         accent: "var(--violet)",
         summary: "AI is shown as a separate slice so it can be discussed without losing the larger digital and household context.",
         includes: ["Text prompts", "Image/video generations", "Estimated electricity use", "Data-center demand context"],
         lenses: ["Energy: inference electricity", "Water: possible cooling demand", "Materials: AI chips and server infrastructure", "Climate: grid-dependent CO2e"],
-        context: "Compare AI usage with broader digital life, home electricity, flights, driving, and IEA data-center growth projections.",
+        context: "Compare AI usage with broader digital life, home electricity, flights, driving, and IEA data-center growth projections. The point is not prompt guilt; it is where AI sits in electricity, water, hardware, and grid planning.",
         caveat: "Per-request energy and water numbers vary widely by model, provider, hardware, and system load. Training and data-center construction are not fully captured."
       }
     };
@@ -1264,7 +1275,7 @@
       const waterGallons = directWater + foodWater + digitalWater;
       const materialSignal = goods + deviceFootprint;
 
-      return { categories, total, aiKwh, digitalKwh, homeKwh, waterGallons, materialSignal, deviceFootprint, gasoline: drivingMiles / v.mpg, actionReduction };
+      return { categories, total, aiKwh, digitalKwh, homeKwh, directWater, foodWater, digitalWater, waterGallons, materialSignal, goods, deviceFootprint, gasoline: drivingMiles / v.mpg, actionReduction };
     }
 
     function updateOutputs(v, result) {
@@ -1341,6 +1352,7 @@
       $("climateScore").textContent = `${format(result.total)} lb`;
       $("energyScore").textContent = `${format(totalContextKwh)} kWh`;
       $("waterScore").textContent = `${format(result.waterGallons)} gal`;
+      $("waterScoreCopy").textContent = `${format(result.directWater)} gal direct household use; most of the rest shown here is indirect food water`;
       $("materialsScore").textContent = `${format(result.materialSignal)} lb`;
       $("homeEnergyPct").textContent = `${homePct}%`;
       $("digitalEnergyPct").textContent = `${digitalPct}%`;
@@ -1348,6 +1360,19 @@
       $("homeEnergyBar").style.setProperty("--w", `${Math.max(1, homePct)}%`);
       $("digitalEnergyBar").style.setProperty("--w", `${Math.max(1, digitalPct)}%`);
       $("aiEnergyBar").style.setProperty("--w", `${Math.max(1, aiPct)}%`);
+
+      const waterMixTotal = Math.max(1, result.directWater + result.foodWater + result.digitalWater);
+      const directWaterShare = pct(result.directWater, waterMixTotal);
+      $("directWaterPct").textContent = `${directWaterShare}% of yours`;
+      $("directWaterBar").style.setProperty("--w", `${Math.max(1, directWaterShare)}%`);
+
+      const materialMixTotal = Math.max(1, result.goods + result.deviceFootprint);
+      const goodsShare = pct(result.goods, materialMixTotal);
+      const deviceShare = pct(result.deviceFootprint, materialMixTotal);
+      $("goodsMaterialPct").textContent = `${goodsShare}%`;
+      $("deviceMaterialPct").textContent = `${deviceShare}%`;
+      $("goodsMaterialBar").style.setProperty("--w", `${Math.max(1, goodsShare)}%`);
+      $("deviceMaterialBar").style.setProperty("--w", `${Math.max(1, deviceShare)}%`);
     }
 
     function openImpactDetail(name, result) {
