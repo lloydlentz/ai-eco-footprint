@@ -3,7 +3,7 @@
 An interactive, single-page environmental footprint estimator that helps people compare everyday climate-impact choices across home energy, transportation, food, waste, digital life, device replacement, and AI usage.
 
 Live site: [https://lloydlentz.github.io/ai-eco-footprint/](https://lloydlentz.github.io/ai-eco-footprint/)  
-Advanced impact map: [https://lloydlentz.github.io/ai-eco-footprint/advanced.html](https://lloydlentz.github.io/ai-eco-footprint/advanced.html)  
+Advanced calculator prototype: [https://lloydlentz.github.io/ai-eco-footprint/advanced.html](https://lloydlentz.github.io/ai-eco-footprint/advanced.html)  
 GitHub repository: [https://github.com/lloydlentz/ai-eco-footprint](https://github.com/lloydlentz/ai-eco-footprint)
 
 ## Purpose
@@ -43,16 +43,16 @@ Additional follow-up requests expanded the tool to include digital life beyond A
 - Action checkboxes for recycling, composting, thermostat/weatherization, renewable electricity, transit/carpooling, buying less, and electronics repair/recycling.
 - Source links and assumptions at the bottom of the page.
 
-## Advanced Impact Map
+## Advanced Calculator Prototype
 
-The advanced page is an exploratory draft for expanding the project beyond a single CO2e estimate. It introduces impact lenses for climate, energy, water, materials, land, air quality, waste, and digital infrastructure.
+The advanced page is an experimental version of the calculator that keeps the original inputs and results while adding broader environmental context. It expands beyond a single CO2e estimate with directional signals for climate, electricity demand, water pressure, materials, land, air quality, waste, and digital infrastructure.
 
-Each element includes a popup-style detail panel with:
+Each calculator category includes a detail panel with:
 
 - What to measure
+- Impact lenses beyond CO2e
 - Broader comparison context
 - Caveats and interpretation notes
-- High-value reduction levers
 
 View it at:
 
