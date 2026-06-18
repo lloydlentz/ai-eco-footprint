@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced Impact Map | AI Eco Footprint</title>
+  <style>
+    :root {
+      --ink: #17211d;
+      --muted: #66746f;
+      --paper: #f7f4ea;
+      --panel: #fffdf5;
+      --line: #d8d0bd;
+      --leaf: #2f7d5b;
+      --moss: #8ba662;
+      --sun: #e7a73b;
+      --clay: #c85f43;
+      --water: #4386a5;
+      --violet: #7060a8;
+      --coal: #26322e;
+      --shadow: 0 18px 55px rgba(28, 36, 30, .13);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Avenir Next, Avenir, Trebuchet MS, sans-serif;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(231, 167, 59, .22), transparent 30rem),
+        radial-gradient(circle at 83% 14%, rgba(67, 134, 165, .2), transparent 32rem),
+        linear-gradient(120deg, rgba(47, 125, 91, .08) 0 1px, transparent 1px 42px),
+        var(--paper);
+    }
+
+    a { color: #1f6951; }
+
+    .shell {
+      width: min(1380px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding-bottom: 18px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .nav a {
+      font-weight: 850;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 2px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, 430px);
+      gap: 26px;
+      align-items: end;
+      padding: 14px 0 26px;
+    }
+
+    h1 {
+      font-family: Georgia, Iowan Old Style, serif;
+      font-size: clamp(2.7rem, 6vw, 7.2rem);
+      line-height: .88;
+      letter-spacing: 0;
+      max-width: 11ch;
+      margin: 0;
+    }
+
+    .lede {
+      color: #3c4944;
+      font-size: clamp(1rem, 1.45vw, 1.25rem);
+      line-height: 1.45;
+      max-width: 69ch;
+      margin: 18px 0 0;
+    }
+
+    .brief {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 245, .82);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .brief strong {
+      display: block;
+      font-family: Georgia, Iowan Old Style, serif;
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .brief p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.42;
+    }
+
+    .impact-board {
+      display: grid;
+      grid-template-columns: minmax(300px, 380px) 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .lens-panel, .map-panel, .context-panel, .source-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 245, .9);
+      box-shadow: var(--shadow);
+    }
+
+    .lens-panel {
+      position: sticky;
+      top: 16px;
+      padding: 18px;
+    }
+
+    h2, h3 {
+      margin: 0;
+      font-family: Georgia, Iowan Old Style, serif;
+      letter-spacing: 0;
+    }
+
+    h2 { font-size: 1.45rem; }
+    h3 { font-size: 1.16rem; }
+
+    .lens-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .lens-button {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      border: 1px solid #dfd6c2;
+      background: #fffaf0;
+      border-radius: 7px;
+      padding: 11px;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .lens-button:hover, .lens-button.active {
+      border-color: color-mix(in srgb, var(--accent), #1e2824 20%);
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent), transparent 72%);
+    }
+
+    .lens-button:focus-visible, .impact-card:focus-visible, .close:focus-visible {
+      outline: 3px solid rgba(67, 134, 165, .55);
+      outline-offset: 3px;
+    }
+
+    .dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: grid;
+      place-items: center;
+      color: #fffdf5;
+      font-weight: 950;
+      font-size: .86rem;
+      box-shadow: inset 0 -8px 14px rgba(0, 0, 0, .14);
+    }
+
+    .lens-button b {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .lens-button span {
+      display: block;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.25;
+    }
+
+    .map-panel {
+      padding: 20px;
+    }
+
+    .map-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .map-head p {
+      color: var(--muted);
+      margin: 8px 0 0;
+      max-width: 68ch;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .impact-card {
+      border: 1px solid #dfd6c2;
+      border-radius: 8px;
+      background: #fffaf0;
+      padding: 15px;
+      min-height: 250px;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 7px;
+      background: var(--accent);
+    }
+
+    .impact-card[hidden] { display: none; }
+
+    .card-kicker {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-left: 5px;
+    }
+
+    .card-kicker span:last-child {
+      color: var(--accent);
+    }
+
+    .impact-card h3 {
+      font-size: 1.48rem;
+      margin: 12px 0 8px 5px;
+    }
+
+    .impact-card p {
+      color: #40514a;
+      line-height: 1.38;
+      margin: 0 0 14px 5px;
+    }
+
+    .measure-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-left: 5px;
+    }
+
+    .measure-list span {
+      border: 1px solid #ded4be;
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #40514a;
+      background: rgba(255, 253, 245, .74);
+      font-size: .8rem;
+      font-weight: 750;
+    }
+
+    .context-panel {
+      margin-top: 20px;
+      padding: 20px;
+    }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .context-card {
+      border: 1px solid #dfd6c2;
+      background: #fffaf0;
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .context-card b {
+      display: block;
+      font-family: Georgia, Iowan Old Style, serif;
+      font-size: 1.35rem;
+      margin-bottom: 5px;
+    }
+
+    .bar-stack {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 112px 1fr 52px;
+      gap: 8px;
+      align-items: center;
+      font-size: .86rem;
+    }
+
+    .track {
+      height: 12px;
+      border-radius: 999px;
+      background: #ebe2ce;
+      overflow: hidden;
+    }
+
+    .fill {
+      width: var(--w);
+      height: 100%;
+      background: var(--accent);
+      border-radius: inherit;
+    }
+
+    .source-panel {
+      margin-top: 20px;
+      padding: 20px;
+    }
+
+    .source-panel ul {
+      columns: 2;
+      padding-left: 18px;
+      line-height: 1.55;
+      margin-bottom: 0;
+    }
+
+    .note {
+      color: var(--muted);
+      line-height: 1.45;
+      margin: 12px 0 0;
+      font-size: .92rem;
+    }
+
+    dialog {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0;
+      max-width: min(780px, calc(100% - 28px));
+      color: var(--ink);
+      background: var(--panel);
+      box-shadow: 0 28px 90px rgba(23, 33, 29, .34);
+    }
+
+    dialog::backdrop {
+      background: rgba(23, 33, 29, .38);
+      backdrop-filter: blur(2px);
+    }
+
+    .dialog-body {
+      padding: 24px;
+      border-top: 8px solid var(--accent);
+    }
+
+    .dialog-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .dialog-body h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: .95;
+      margin-bottom: 10px;
+    }
+
+    .close {
+      border: 1px solid #d8d0bd;
+      background: #fffaf0;
+      color: var(--ink);
+      border-radius: 999px;
+      width: 38px;
+      height: 38px;
+      font-size: 1.35rem;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .dialog-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .dialog-block {
+      border: 1px solid #dfd6c2;
+      border-radius: 8px;
+      background: #fffaf0;
+      padding: 14px;
+    }
+
+    .dialog-block ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      line-height: 1.45;
+    }
+
+    .dialog-block p {
+      color: var(--muted);
+      line-height: 1.45;
+      margin: 10px 0 0;
+    }
+
+    @media (max-width: 980px) {
+      header, .impact-board, .context-grid { grid-template-columns: 1fr; }
+      .lens-panel { position: static; }
+    }
+
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 20px, 1380px); padding-top: 14px; }
+      .impact-grid, .dialog-grid { grid-template-columns: 1fr; }
+      .map-head, .dialog-top, .nav { align-items: start; flex-direction: column; }
+      .bar-row { grid-template-columns: 88px 1fr 44px; }
+      .source-panel ul { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="Page navigation">
+      <a href="index.html">Back to footprint calculator</a>
+      <span>Advanced draft: impact categories and comparison context</span>
+    </nav>
+
+    <header>
+      <div>
+        <h1>Advanced Impact Map</h1>
+        <p class="lede">A draft layer for exploring the environmental effects that sit underneath a personal footprint estimate: climate, energy, water, land, materials, air quality, waste, and digital infrastructure.</p>
+      </div>
+      <aside class="brief">
+        <strong>The important shift</strong>
+        <p>CO2e is useful, but it is not the whole story. The next version of this tool should let someone ask: impact on what, measured how, and compared with which larger system?</p>
+      </aside>
+    </header>
+
+    <main class="impact-board">
+      <aside class="lens-panel">
+        <h2>Explore by lens</h2>
+        <p class="note">Filter the map by the kind of impact you want to explain. Click any element for measurement ideas, caveats, and reduction levers.</p>
+        <div class="lens-list" id="lensList"></div>
+      </aside>
+
+      <section>
+        <div class="map-panel">
+          <div class="map-head">
+            <div>
+              <h2>Elements to include</h2>
+              <p id="filterCopy">Showing the complete draft map. These are the elements most worth explaining before comparing personal choices with U.S. or global systems.</p>
+            </div>
+          </div>
+          <div class="impact-grid" id="impactGrid"></div>
+        </div>
+
+        <section class="context-panel">
+          <h2>Broader context comparisons</h2>
+          <p class="note">These are the kinds of comparisons that can sit behind the popups. They help keep personal choices connected to system scale without making false one-to-one claims.</p>
+          <div class="context-grid">
+            <article class="context-card" style="--accent: var(--clay)">
+              <b>U.S. greenhouse gases</b>
+              <span class="note">Sector shares, 2023 orientation.</span>
+              <div class="bar-stack">
+                <div class="bar-row"><span>Transport</span><div class="track"><div class="fill" style="--w:30%"></div></div><span>30%</span></div>
+                <div class="bar-row"><span>Power</span><div class="track"><div class="fill" style="--w:24%"></div></div><span>24%</span></div>
+                <div class="bar-row"><span>Industry</span><div class="track"><div class="fill" style="--w:23%"></div></div><span>23%</span></div>
+                <div class="bar-row"><span>Buildings</span><div class="track"><div class="fill" style="--w:13%"></div></div><span>13%</span></div>
+                <div class="bar-row"><span>Agriculture</span><div class="track"><div class="fill" style="--w:10%"></div></div><span>10%</span></div>
+              </div>
+            </article>
+
+            <article class="context-card" style="--accent: var(--water)">
+              <b>Global freshwater withdrawals</b>
+              <span class="note">Sector shares; withdrawals are not the same as consumption.</span>
+              <div class="bar-stack">
+                <div class="bar-row"><span>Agriculture</span><div class="track"><div class="fill" style="--w:69%"></div></div><span>69%</span></div>
+                <div class="bar-row"><span>Industry</span><div class="track"><div class="fill" style="--w:19%"></div></div><span>19%</span></div>
+                <div class="bar-row"><span>Municipal</span><div class="track"><div class="fill" style="--w:12%"></div></div><span>12%</span></div>
+              </div>
+            </article>
+
+            <article class="context-card" style="--accent: var(--violet)">
+              <b>Digital electricity</b>
+              <span class="note">Data centers were about 1.5% of global electricity use in 2024; IEA projects rapid growth.</span>
+              <div class="bar-stack">
+                <div class="bar-row"><span>2024 global</span><div class="track"><div class="fill" style="--w:15%"></div></div><span>1.5%</span></div>
+                <div class="bar-row"><span>2030 base</span><div class="track"><div class="fill" style="--w:30%"></div></div><span>&lt;3%</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="source-panel">
+          <h2>Reference anchors</h2>
+          <ul>
+            <li><a href="https://www.epa.gov/ghgemissions/sources-greenhouse-gas-emissions">EPA: sources of U.S. greenhouse gas emissions</a></li>
+            <li><a href="https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks">EPA: U.S. greenhouse gas inventory</a></li>
+            <li><a href="https://www.usgs.gov/mission-areas/water-resources/science/water-use-united-states">USGS: water use in the United States</a></li>
+            <li><a href="https://www.fao.org/aquastat/en/overview/methodology/water-use/">FAO AQUASTAT: global water withdrawal sectors</a></li>
+            <li><a href="https://www.unesco.org/reports/wwdr/en/2024/s">UNESCO: world water statistics</a></li>
+            <li><a href="https://www.iea.org/reports/energy-and-ai">IEA: Energy and AI</a></li>
+            <li><a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai">IEA: energy demand from AI</a></li>
+            <li><a href="https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks">IEA: data centres and transmission networks</a></li>
+          </ul>
+          <p class="note">This page is intentionally a draft. The right next step is to connect these impact lenses to the calculator values and add source-specific assumptions for each popup.</p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="impactDialog">
+    <div class="dialog-body" id="dialogBody">
+      <div class="dialog-top">
+        <div>
+          <h2 id="dialogTitle"></h2>
+          <p class="note" id="dialogSummary"></p>
+        </div>
+        <button class="close" type="button" id="closeDialog" aria-label="Close">x</button>
+      </div>
+      <div class="dialog-grid">
+        <section class="dialog-block">
+          <h3>Measure this with</h3>
+          <ul id="dialogMeasures"></ul>
+        </section>
+        <section class="dialog-block">
+          <h3>Broader comparison</h3>
+          <p id="dialogComparison"></p>
+        </section>
+        <section class="dialog-block">
+          <h3>Caveats</h3>
+          <ul id="dialogCaveats"></ul>
+        </section>
+        <section class="dialog-block">
+          <h3>High-value levers</h3>
+          <ul id="dialogLevers"></ul>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <img src="https://dev.lloydl.com/pxl.php?w=ai-eco-footprint" alt="" width="1" height="1" style="position:absolute;left:-9999px;width:1px;height:1px;" aria-hidden="true">
+
+  <script>
+    const lenses = [
+      { id: "all", label: "All elements", note: "Full impact map", accent: "var(--coal)" },
+      { id: "climate", label: "Climate", note: "CO2e, methane, nitrous oxide", accent: "var(--clay)" },
+      { id: "energy", label: "Energy", note: "Electricity, fuel, grid demand", accent: "var(--sun)" },
+      { id: "water", label: "Water", note: "Direct use, indirect use, scarcity", accent: "var(--water)" },
+      { id: "materials", label: "Materials & land", note: "Manufacturing, mining, land use", accent: "var(--moss)" },
+      { id: "health", label: "Local health", note: "Air pollution and nearby burdens", accent: "var(--leaf)" }
+    ];
+
+    const impacts = [
+      {
+        id: "greenhouse",
+        lens: ["climate"],
+        accent: "var(--clay)",
+        label: "Climate",
+        title: "Greenhouse gases",
+        summary: "The main climate lens: carbon dioxide, methane, nitrous oxide, and other gases expressed as CO2e.",
+        measures: ["lb CO2e/year", "gasoline gallons", "therms", "kWh by grid mix", "methane and N2O sources"],
+        comparison: "Compare personal emissions with U.S. sector emissions: transportation, electric power, industry, buildings, and agriculture. This keeps the personal estimate tied to the larger economy.",
+        caveats: ["CO2e compresses gases with different lifetimes into one number.", "Methane from food, gas leakage, and waste can be important even when CO2 dominates.", "Grid mix changes the climate impact of each kWh."],
+        levers: ["Drive less or use a cleaner vehicle.", "Reduce flights.", "Improve home efficiency and electrify when the grid is cleaner.", "Shift diet away from high-impact foods."]
+      },
+      {
+        id: "electricity",
+        lens: ["energy"],
+        accent: "var(--sun)",
+        label: "Energy",
+        title: "Electricity demand",
+        summary: "The pressure a lifestyle puts on the grid through home use, cooling, devices, digital services, and AI.",
+        measures: ["kWh/year", "peak demand", "regional grid emissions", "renewable share"],
+        comparison: "Compare household electricity with average U.S. home use, then compare digital and AI electricity with broader data-center demand.",
+        caveats: ["A kWh at noon on a renewable-heavy grid is different from a kWh during a fossil-heavy peak.", "Peak demand can matter as much as annual consumption for infrastructure.", "AI estimates vary widely by model, hardware, provider, and request type."],
+        levers: ["Weatherize and reduce cooling loads.", "Use efficient appliances and devices.", "Choose renewable electricity where credible.", "Batch or right-size compute-heavy digital tasks."]
+      },
+      {
+        id: "water",
+        lens: ["water"],
+        accent: "var(--water)",
+        label: "Water",
+        title: "Water impact",
+        summary: "Direct household water plus indirect water embedded in food, electricity, cooling, goods, and data centers.",
+        measures: ["gallons/year", "withdrawals vs consumption", "local water stress", "blue/green/grey water"],
+        comparison: "Compare direct household water with public supply, then show that global freshwater withdrawals are dominated by agriculture, followed by industry and municipal use.",
+        caveats: ["Water withdrawn is not always water consumed.", "Location matters: a gallon in a dry basin has a different impact than a gallon in a water-rich basin.", "Food water footprints can dwarf direct household use."],
+        levers: ["Reduce lawn irrigation.", "Fix leaks and use efficient fixtures.", "Reduce high-water food waste.", "Consider local water stress when discussing data centers and energy."]
+      },
+      {
+        id: "digital",
+        lens: ["energy", "water", "materials"],
+        accent: "var(--violet)",
+        label: "Digital",
+        title: "Digital infrastructure",
+        summary: "AI, streaming, social media, cloud storage, gaming, networks, data centers, and the devices used to access them.",
+        measures: ["kWh/year", "data-center electricity", "cooling water", "device replacement cycle", "embodied carbon"],
+        comparison: "Compare personal digital habits with household electricity first, then zoom out to IEA estimates for data centers as a share of global electricity.",
+        caveats: ["Per-query AI water and energy numbers are highly context-dependent.", "Training, inference, data-center construction, chips, and devices are often counted separately.", "Local grid and water conditions can dominate the impact."],
+        levers: ["Keep devices longer.", "Repair or buy refurbished.", "Avoid unnecessary high-resolution streaming or generation.", "Use AI where it replaces more resource-intensive work, not as pure extra demand."]
+      },
+      {
+        id: "materials",
+        lens: ["materials"],
+        accent: "var(--moss)",
+        label: "Materials",
+        title: "Materials and manufacturing",
+        summary: "The embodied impact of phones, laptops, cars, appliances, furniture, clothing, packaging, and home improvements.",
+        measures: ["annualized embodied CO2e", "device lifespan", "new goods purchased", "repair/reuse rate"],
+        comparison: "Compare frequent replacement with longer product lifetimes. For devices, show manufacturing as separate from annual electricity use.",
+        caveats: ["Embodied impacts are hard to estimate from consumer inputs.", "A low-energy device can still carry meaningful mining and manufacturing impacts.", "Recycling helps, but reducing new production usually matters more."],
+        levers: ["Buy fewer new goods.", "Keep electronics longer.", "Repair and share equipment.", "Choose used or refurbished products."]
+      },
+      {
+        id: "land",
+        lens: ["materials", "climate", "water"],
+        accent: "var(--leaf)",
+        label: "Land",
+        title: "Land use and ecosystems",
+        summary: "The pressure a lifestyle puts on land through diet, housing, roads, energy infrastructure, mining, and material demand.",
+        measures: ["acres or square feet equivalent", "diet pattern", "housing size per person", "biodiversity pressure"],
+        comparison: "Compare diet-related land pressure with housing footprint, and distinguish land occupation from ecosystem disruption.",
+        caveats: ["Biodiversity is not easily reduced to one score.", "Land use varies dramatically by food type and production system.", "Dense housing can reduce land and energy needs per person."],
+        levers: ["Reduce beef and lamb consumption.", "Waste less food.", "Live in smaller or shared spaces where feasible.", "Choose durable goods over disposable ones."]
+      },
+      {
+        id: "air",
+        lens: ["health", "energy", "climate"],
+        accent: "var(--coal)",
+        label: "Health",
+        title: "Air pollution",
+        summary: "Local and regional pollutants from vehicles, combustion appliances, power plants, industry, and wildfire-related energy choices.",
+        measures: ["PM2.5", "NOx", "SO2", "ozone precursors", "indoor combustion exposure"],
+        comparison: "Compare climate impact with local health impact: an action can have modest CO2e savings but meaningful air-quality benefits nearby.",
+        caveats: ["Location matters: pollution burden depends on who lives near roads, plants, ports, and industrial sites.", "Indoor gas combustion affects exposure differently than tailpipe emissions.", "Climate and air-quality benefits overlap but are not identical."],
+        levers: ["Reduce car trips.", "Avoid idling.", "Improve ventilation or move away from indoor combustion.", "Support cleaner electricity and freight systems."]
+      },
+      {
+        id: "waste",
+        lens: ["materials", "climate", "water"],
+        accent: "var(--moss)",
+        label: "Waste",
+        title: "Waste and circularity",
+        summary: "Landfill waste, food waste, composting, recycling, e-waste, packaging, and the avoided impact of reuse.",
+        measures: ["lb landfill waste/year", "food waste", "recycling participation", "composting", "e-waste handling"],
+        comparison: "Compare recycling and composting with upstream reduction: the cleanest waste stream is usually the product or food never wasted.",
+        caveats: ["Recycling benefits depend on local acceptance and contamination.", "Food in landfills can produce methane.", "E-waste needs responsible handling because of metals and toxic materials."],
+        levers: ["Compost where available.", "Cut food waste.", "Repair and reuse before recycling.", "Use certified electronics recycling paths."]
+      }
+    ];
+
+    const lensList = document.getElementById("lensList");
+    const impactGrid = document.getElementById("impactGrid");
+    const filterCopy = document.getElementById("filterCopy");
+    const dialog = document.getElementById("impactDialog");
+    const dialogBody = document.getElementById("dialogBody");
+    const closeDialog = document.getElementById("closeDialog");
+
+    let activeLens = "all";
+
+    function renderLenses() {
+      lensList.innerHTML = lenses.map((lens) => `
+        <button class="lens-button ${lens.id === activeLens ? "active" : ""}" type="button" data-lens="${lens.id}" style="--accent:${lens.accent}">
+          <span class="dot">${lens.id === "all" ? "*" : lens.label.slice(0, 1)}</span>
+          <span><b>${lens.label}</b><span>${lens.note}</span></span>
+        </button>
+      `).join("");
+    }
+
+    function renderImpacts() {
+      impactGrid.innerHTML = impacts.map((impact) => {
+        const hidden = activeLens !== "all" && !impact.lens.includes(activeLens);
+        return `
+          <button class="impact-card" type="button" data-impact="${impact.id}" style="--accent:${impact.accent}" ${hidden ? "hidden" : ""}>
+            <div class="card-kicker"><span>${impact.label}</span><span>Open</span></div>
+            <h3>${impact.title}</h3>
+            <p>${impact.summary}</p>
+            <div class="measure-list">${impact.measures.slice(0, 4).map((measure) => `<span>${measure}</span>`).join("")}</div>
+          </button>
+        `;
+      }).join("");
+
+      const lens = lenses.find((item) => item.id === activeLens);
+      filterCopy.textContent = activeLens === "all"
+        ? "Showing the complete draft map. These are the elements most worth explaining before comparing personal choices with U.S. or global systems."
+        : `Showing ${lens.label.toLowerCase()} elements. ${lens.note}.`;
+    }
+
+    function openImpact(id) {
+      const impact = impacts.find((item) => item.id === id);
+      if (!impact) return;
+      dialogBody.style.setProperty("--accent", impact.accent);
+      document.getElementById("dialogTitle").textContent = impact.title;
+      document.getElementById("dialogSummary").textContent = impact.summary;
+      document.getElementById("dialogMeasures").innerHTML = impact.measures.map((item) => `<li>${item}</li>`).join("");
+      document.getElementById("dialogComparison").textContent = impact.comparison;
+      document.getElementById("dialogCaveats").innerHTML = impact.caveats.map((item) => `<li>${item}</li>`).join("");
+      document.getElementById("dialogLevers").innerHTML = impact.levers.map((item) => `<li>${item}</li>`).join("");
+      dialog.showModal();
+    }
+
+    lensList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-lens]");
+      if (!button) return;
+      activeLens = button.dataset.lens;
+      renderLenses();
+      renderImpacts();
+    });
+
+    impactGrid.addEventListener("click", (event) => {
+      const card = event.target.closest("[data-impact]");
+      if (card) openImpact(card.dataset.impact);
+    });
+
+    closeDialog.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    renderLenses();
+    renderImpacts();
+  </script>
+</body>
+</html>
