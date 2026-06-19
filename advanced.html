@@ -576,6 +576,19 @@
       margin-top: 12px;
     }
 
+    .mini-label {
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      margin-top: 14px;
+      text-transform: uppercase;
+    }
+
+    .mini-label:first-child {
+      margin-top: 0;
+    }
+
     .mini-row {
       display: grid;
       grid-template-columns: 106px 1fr 54px;
@@ -977,30 +990,45 @@
           <div class="context-rows">
             <article class="context-card" style="--accent: var(--clay)">
               <h3>Climate: personal levers sit inside sector systems</h3>
-              <p class="fineprint">Your total is personal CO2e. The national picture is dominated by transportation, electricity, and industry, so individual choices connect to larger systems through cars, flights, buildings, purchases, and the grid.</p>
+              <p class="fineprint">Your total is personal CO2e. It is not shown as a percent of U.S. emissions because one person is tiny at national scale; instead, your estimate is mapped to the same kinds of sectors.</p>
               <div class="mini-bars">
+                <div class="mini-label">U.S. emissions by sector</div>
                 <div class="mini-row"><span>Transport</span><div class="mini-track"><div class="mini-fill" style="--w:30%"></div></div><span>30%</span></div>
                 <div class="mini-row"><span>Power</span><div class="mini-track"><div class="mini-fill" style="--w:24%"></div></div><span>24%</span></div>
                 <div class="mini-row"><span>Industry</span><div class="mini-track"><div class="mini-fill" style="--w:23%"></div></div><span>23%</span></div>
                 <div class="mini-row"><span>Buildings</span><div class="mini-track"><div class="mini-fill" style="--w:13%"></div></div><span>13%</span></div>
                 <div class="mini-row"><span>Agric.</span><div class="mini-track"><div class="mini-fill" style="--w:10%"></div></div><span>10%</span></div>
+                <div class="mini-label">Your estimate maps mostly to</div>
+                <div class="mini-row"><span>Travel</span><div class="mini-track"><div class="mini-fill" id="personalTravelBar" style="--w:1%"></div></div><span id="personalTravelPct">0%</span></div>
+                <div class="mini-row"><span>Home/grid</span><div class="mini-track"><div class="mini-fill" id="personalHomeBar" style="--w:1%"></div></div><span id="personalHomePct">0%</span></div>
+                <div class="mini-row"><span>Food</span><div class="mini-track"><div class="mini-fill" id="personalFoodBar" style="--w:1%"></div></div><span id="personalFoodPct">0%</span></div>
+                <div class="mini-row"><span>Goods/digital</span><div class="mini-track"><div class="mini-fill" id="personalGoodsBar" style="--w:1%"></div></div><span id="personalGoodsPct">0%</span></div>
               </div>
             </article>
             <article class="context-card" style="--accent: var(--water)">
               <h3>Water: faucet use is one small part</h3>
-              <p class="fineprint">Your direct household water is part of public supply. In U.S. withdrawals, public supply is far smaller than thermoelectric power cooling and irrigation; food choices often matter through that irrigation system.</p>
+              <p class="fineprint">Your faucet use is not 6% of U.S. water. It is part of the public-supply slice. The second group shows your own estimated water signal, where food often dwarfs direct household water.</p>
               <div class="mini-bars">
+                <div class="mini-label">U.S. withdrawals by use</div>
                 <div class="mini-row"><span>Power cooling</span><div class="mini-track"><div class="mini-fill" style="--w:41%"></div></div><span>41%</span></div>
                 <div class="mini-row"><span>Irrigation</span><div class="mini-track"><div class="mini-fill" style="--w:37%"></div></div><span>37%</span></div>
                 <div class="mini-row"><span>Public supply</span><div class="mini-track"><div class="mini-fill" style="--w:12%"></div></div><span>12%</span></div>
                 <div class="mini-row"><span>Industrial</span><div class="mini-track"><div class="mini-fill" style="--w:5%"></div></div><span>5%</span></div>
-                <div class="mini-row"><span>Your faucet</span><div class="mini-track"><div class="mini-fill" id="directWaterBar" style="--w:1%"></div></div><span id="directWaterPct">in 12%</span></div>
+                <div class="mini-label">Your estimated water signal</div>
+                <div class="mini-row"><span>Faucet/home</span><div class="mini-track"><div class="mini-fill" id="directWaterBar" style="--w:1%"></div></div><span id="directWaterPct">0%</span></div>
+                <div class="mini-row"><span>Food</span><div class="mini-track"><div class="mini-fill" id="foodWaterBar" style="--w:1%"></div></div><span id="foodWaterPct">0%</span></div>
+                <div class="mini-row"><span>Digital/AI</span><div class="mini-track"><div class="mini-fill" id="digitalWaterBar" style="--w:1%"></div></div><span id="digitalWaterPct">0%</span></div>
               </div>
             </article>
             <article class="context-card" style="--accent: var(--violet)">
               <h3>Electricity: your digital use rides on the grid</h3>
-              <p class="fineprint">Your home, digital, and AI use are personal electricity demand. Their impact depends on the grid, peak demand, and data-center growth rather than kWh alone.</p>
+              <p class="fineprint">Your kWh belongs mostly to residential demand, while data centers generally sit in commercial/industrial demand. Impact depends on grid mix, peak demand, and new load growth.</p>
               <div class="mini-bars">
+                <div class="mini-label">U.S. electricity sales by sector</div>
+                <div class="mini-row"><span>Residential</span><div class="mini-track"><div class="mini-fill" style="--w:39%"></div></div><span>39%</span></div>
+                <div class="mini-row"><span>Commercial</span><div class="mini-track"><div class="mini-fill" style="--w:36%"></div></div><span>36%</span></div>
+                <div class="mini-row"><span>Industrial</span><div class="mini-track"><div class="mini-fill" style="--w:25%"></div></div><span>25%</span></div>
+                <div class="mini-label">Your estimated kWh</div>
                 <div class="mini-row"><span>AI kWh</span><div class="mini-track"><div class="mini-fill" id="aiEnergyBar" style="--w:1%"></div></div><span id="aiEnergyPct">0%</span></div>
                 <div class="mini-row"><span>Digital</span><div class="mini-track"><div class="mini-fill" id="digitalEnergyBar" style="--w:1%"></div></div><span id="digitalEnergyPct">0%</span></div>
                 <div class="mini-row"><span>Home</span><div class="mini-track"><div class="mini-fill" id="homeEnergyBar" style="--w:1%"></div></div><span id="homeEnergyPct">0%</span></div>
@@ -1008,11 +1036,14 @@
             </article>
             <article class="context-card" style="--accent: var(--moss)">
               <h3>Waste and materials: end-of-pipe is not the whole story</h3>
-              <p class="fineprint">Recycling and composting help, but the larger material impact often comes earlier: mining, manufacturing, packaging, shipping, and how quickly products are replaced.</p>
+              <p class="fineprint">Your trash is visible, but many material impacts happen upstream. The national MSW number is a waste benchmark; your materials signal also includes goods and device replacement.</p>
               <div class="mini-bars">
-                <div class="mini-row"><span>Your goods</span><div class="mini-track"><div class="mini-fill" id="goodsMaterialBar" style="--w:1%"></div></div><span id="goodsMaterialPct">0%</span></div>
-                <div class="mini-row"><span>Devices</span><div class="mini-track"><div class="mini-fill" id="deviceMaterialBar" style="--w:1%"></div></div><span id="deviceMaterialPct">0%</span></div>
+                <div class="mini-label">U.S. waste benchmark</div>
                 <div class="mini-row"><span>U.S. MSW</span><div class="mini-track"><div class="mini-fill" style="--w:49%"></div></div><span>4.9 lb/d</span></div>
+                <div class="mini-row"><span>Recycled</span><div class="mini-track"><div class="mini-fill" style="--w:32%"></div></div><span>32%</span></div>
+                <div class="mini-label">Your material signal</div>
+                <div class="mini-row"><span>Goods</span><div class="mini-track"><div class="mini-fill" id="goodsMaterialBar" style="--w:1%"></div></div><span id="goodsMaterialPct">0%</span></div>
+                <div class="mini-row"><span>Devices</span><div class="mini-track"><div class="mini-fill" id="deviceMaterialBar" style="--w:1%"></div></div><span id="deviceMaterialPct">0%</span></div>
               </div>
             </article>
           </div>
@@ -1361,10 +1392,34 @@
       $("digitalEnergyBar").style.setProperty("--w", `${Math.max(1, digitalPct)}%`);
       $("aiEnergyBar").style.setProperty("--w", `${Math.max(1, aiPct)}%`);
 
+      const travelClimate = result.categories.Driving + result.categories.Flying;
+      const homeClimate = result.categories.Home;
+      const foodClimate = result.categories.Food;
+      const goodsClimate = result.categories["Waste & goods"] + result.categories["Digital life"] + result.categories.AI;
+      const climateMapTotal = Math.max(1, travelClimate + homeClimate + foodClimate + goodsClimate);
+      const travelPct = pct(travelClimate, climateMapTotal);
+      const personalHomePct = pct(homeClimate, climateMapTotal);
+      const foodPct = pct(foodClimate, climateMapTotal);
+      const goodsPct = pct(goodsClimate, climateMapTotal);
+      $("personalTravelPct").textContent = `${travelPct}%`;
+      $("personalHomePct").textContent = `${personalHomePct}%`;
+      $("personalFoodPct").textContent = `${foodPct}%`;
+      $("personalGoodsPct").textContent = `${goodsPct}%`;
+      $("personalTravelBar").style.setProperty("--w", `${Math.max(1, travelPct)}%`);
+      $("personalHomeBar").style.setProperty("--w", `${Math.max(1, personalHomePct)}%`);
+      $("personalFoodBar").style.setProperty("--w", `${Math.max(1, foodPct)}%`);
+      $("personalGoodsBar").style.setProperty("--w", `${Math.max(1, goodsPct)}%`);
+
       const waterMixTotal = Math.max(1, result.directWater + result.foodWater + result.digitalWater);
       const directWaterShare = pct(result.directWater, waterMixTotal);
+      const foodWaterShare = pct(result.foodWater, waterMixTotal);
+      const digitalWaterShare = pct(result.digitalWater, waterMixTotal);
       $("directWaterPct").textContent = `${directWaterShare}% of yours`;
       $("directWaterBar").style.setProperty("--w", `${Math.max(1, directWaterShare)}%`);
+      $("foodWaterPct").textContent = `${foodWaterShare}%`;
+      $("digitalWaterPct").textContent = `${digitalWaterShare}%`;
+      $("foodWaterBar").style.setProperty("--w", `${Math.max(1, foodWaterShare)}%`);
+      $("digitalWaterBar").style.setProperty("--w", `${Math.max(1, digitalWaterShare)}%`);
 
       const materialMixTotal = Math.max(1, result.goods + result.deviceFootprint);
       const goodsShare = pct(result.goods, materialMixTotal);
